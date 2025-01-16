@@ -11,21 +11,22 @@ namespace S10267204_PRG2Assignment
         public string FlightNumber { get; set; }
         public string Origin { get; set; }
         public string Destination { get; set; }
-        public string ArrivalDepatureTiming { get; set; }
-        public string SpecialRequestCode { get; set; }
+        public DateTime ExpectedTime { get; set; }
+        public string Status { get; set; }
+        public Flight () { }
 
-        public Flight (string flightNumber, string origin, string destination, string arrivalDepatureTiming, string specialRequestCode)
+        public Flight (string flightNumber, string origin, string destination, DateTime expectedTime, string status = "Unknown")
         {
             FlightNumber = flightNumber;
             Origin = origin;
             Destination = destination;
-            ArrivalDepatureTiming = arrivalDepatureTiming;
-            SpecialRequestCode = specialRequestCode;
+            ExpectedTime = expectedTime;
+            Status = status;
         }
 
         public override string ToString()
         {
-            return $"Flight Number: {FlightNumber,-7} Origin: {Origin,-18} Destination: {Destination,-18} Arrival/Depature Time: {ArrivalDepatureTiming,-9} Special Request Code: {SpecialRequestCode,-4}";
+            return $"Flight Number: {FlightNumber,-7} Origin: {Origin,-17} Destination: {Destination,-17} Arrival/Depature Time: {ExpectedTime,-23} Status: {Status,-6}";
         }
     }
 }

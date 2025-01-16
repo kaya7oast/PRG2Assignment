@@ -5,6 +5,7 @@
 //==========================================================
 // features working on: 2, 3, 5, 6 & 9
 using S10267204_PRG2Assignment;
+using System.Runtime.Serialization;
 
 //FEATURE 1 Load files (airlines and boarding gates)
 
@@ -48,6 +49,7 @@ void InitializeFlightDic()
 {
     StreamReader sr = new StreamReader("flights.csv");
     string? s = sr.ReadLine();
+    string[] formats = { "h:mm tt", "htt" };
     while ((s = sr.ReadLine()) != null)
     {
         string[] info = s.Split(",");
@@ -55,9 +57,19 @@ void InitializeFlightDic()
         string origin = info[1];
         string destination = info[2];
         string ETA = info[3];
-        string SRC = info[4];
-
-        FlightDic.Add(flight_number, new Flight(flight_number, origin, destination, ETA, SRC));
+        DateTime expectedTime;
+        if (DateTime.TryParseExact(ETA,
+            formats,
+            System.Globalization.CultureInfo.InvariantCulture,
+            System.Globalization.DateTimeStyles.None,
+            out expectedTime))
+        {
+            FlightDic.Add(flight_number, new Flight(flight_number, origin, destination, expectedTime));
+        }
+        else
+        {
+            Console.WriteLine($"Failed to parse time for flight {flight_number}: {ETA}");
+        }
     }
 }
 //FEATURE 3 display info
@@ -78,12 +90,16 @@ void DisplayFlightInfo()
 // FEATURE 6 create a new flight
 void CreateFlight()
 {
-    Console.Write("Enter flight details (Flight Number, Origin, Destination, and Expected Departure/Arrival Time) [seperate info with ',']: ");
+    Console.Write("Enter flight details (Flight Number, Origin, Destination) [seperate info with ',']: ");
     string[] details = Console.ReadLine().Split(",");
     string new_Flight_No = details[0];
     string new_Origin = details[1];
     string new_Destination = details[2];
-    string new_ETA = details[3];
+    string[] formats = { "h:mm tt", "htt" };
+    Console.WriteLine("Enter Flight's Estimated Time Arrival [hh:mm tt]: ");
+    string new_ETA = Console.ReadLine();
+    string datetimeformat = "hh:mm tt";
+    DateTime expectedTime = DateTime.ParseExact(new_ETA, datetimeformat, System.Globalization.CultureInfo.InvariantCulture);
     Console.WriteLine("Would you like to enter any additional information (i.e Special Request Code) [Type 'No' if no addtional info added]: ");
     string additional_details = Console.ReadLine();
     string new_SRC = "";
@@ -91,7 +107,7 @@ void CreateFlight()
     {
         new_SRC = additional_details;
     }
-    Flight New_Flight = new Flight(new_Flight_No, new_Origin, new_Destination, new_ETA, new_SRC);
+    Flight New_Flight = new Flight(new_Flight_No, new_Origin, new_Destination, expectedTime, new_SRC);
     string new_flight_details = $"{new_Flight_No},{new_Origin},{new_Destination},{new_ETA},{new_SRC}";
     using (StreamWriter sw = new StreamWriter("flights.csv", append: true))
     {
@@ -127,3 +143,5 @@ InitializeAirlines();
 DisplayFlightInfo();
 DisplayBoardingGateInfo();
 */
+InitializeFlightDic();
+DisplayFlightInfo();

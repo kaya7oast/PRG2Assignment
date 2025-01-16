@@ -11,10 +11,13 @@ namespace S10267204_PRG2Assignment
         public string Name { get; set; }
         public string Code { get; set; }
 
+        public Dictionary<string, Flight> FlightDic { get; set; }
+
         public Airline(string name, string code)
         {
             Name = name;
             Code = code;
+            FlightDic = new Dictionary<string, Flight>();
         }
 
         public override string ToString()
