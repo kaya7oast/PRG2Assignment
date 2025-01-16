@@ -8,7 +8,7 @@ using S10267204_PRG2Assignment;
 
 //FEATURE 1 Load files (airlines and boarding gates)
 
-/*
+
 Dictionary<string, Airline> airlinesDic = new Dictionary<string, Airline>();
 void InitializeAirlines()
     // you should name them initialize___dict for future reference as there are many things called airlines and boarding gates already
@@ -40,7 +40,7 @@ void InitializeBoarding_gates()
         boardingGatesDic[columns[0]] = gate;
     }
 }
-*/
+
 
 //FEATURE 2 Load files (flights)
 Dictionary<string,Flight> FlightDic = new Dictionary<string,Flight>();
