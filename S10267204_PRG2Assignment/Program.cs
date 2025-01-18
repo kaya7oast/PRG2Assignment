@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 
 Dictionary<string, Airline> airlinesDic = new Dictionary<string, Airline>();
 void InitializeAirlines()
-    // you should name them initialize___dict for future reference as there are many things called airlines and boarding gates already
+// you should name them initialize___dict for future reference as there are many things called airlines and boarding gates already
 {
     string[] airlineLines = File.ReadAllLines("airlines.csv");
 
@@ -44,7 +44,7 @@ void InitializeBoarding_gates()
 
 
 //FEATURE 2 Load files (flights)
-Dictionary<string,Flight> FlightDic = new Dictionary<string,Flight>();
+Dictionary<string, Flight> FlightDic = new Dictionary<string, Flight>();
 Dictionary<string, string> flightSRCs = new Dictionary<string, string>();
 void InitializeFlightDic()
 {
@@ -92,6 +92,67 @@ void DisplayFlightInfo()
 // FEATURE 4 display boarding gates in terminal 5 + extra info
 
 // FEATURE 5 assign boarding gate to a flight
+void AssignBGtoFlight()
+{
+    Console.WriteLine("Please input flight no.: ");
+    string searched_flightNO = Console.ReadLine();
+    if (flightSRCs[searched_flightNO] != "")
+    {
+        Console.WriteLine($"{FlightDic[searched_flightNO]}\tSRC: {flightSRCs[searched_flightNO]}");
+    }
+    else
+    {
+        Console.WriteLine($"{FlightDic[searched_flightNO]}");
+    }
+    while (true)
+    {
+        Console.WriteLine("Please input boarding gate: ");
+        string selected_BoardingGate = Console.ReadLine();
+        if (boardingGatesDic[selected_BoardingGate].Flight == null)
+        {
+            boardingGatesDic[selected_BoardingGate].Flight = FlightDic[searched_flightNO];
+            if (flightSRCs[searched_flightNO] != "")
+            {
+                Console.WriteLine($"{FlightDic[searched_flightNO]}\tSRC: {flightSRCs[searched_flightNO]}\tBoarding Gate: {selected_BoardingGate}");
+            }
+            else
+            {
+                Console.WriteLine($"{FlightDic[searched_flightNO]}\tBoarding Gate: {selected_BoardingGate}");
+            }
+            Console.WriteLine("would you like to update the Status of the Flight, with a new Status of any of the following options: “Delayed” or “Boarding” [Y] \nor set the Status of the Flight to the default of “On Time” and continue to the next step [N]: ");
+            string user_answer = Console.ReadLine().ToLower();
+            if (user_answer != "n")
+            {
+                Console.WriteLine("Would you like the status to be: “Delayed”, “Boarding”, or “On Time”: ");
+                string selected_status = Console.ReadLine();
+                switch (selected_status)
+                {
+                    case "Delayed":
+                        FlightDic[searched_flightNO].Status = "Delayed";
+                        break;
+                    case "Boarding":
+                        FlightDic[searched_flightNO].Status = "Boarding";
+                        break;
+                    default:
+                        Console.WriteLine("Invalid Input");
+                        break;
+
+                }
+
+            }
+            else
+            {
+                FlightDic[searched_flightNO].Status = "On Time";
+            }
+            Console.WriteLine($"Flight {searched_flightNO} succesfully assigned to {selected_BoardingGate}, Status: {FlightDic[searched_flightNO].Status}");
+            break;
+        }
+        else
+        {
+            Console.WriteLine("Boarding Gate already has scheduled flight please pick again.");
+        }
+    }
+}
 
 
 // FEATURE 6 create a new flight
@@ -153,3 +214,4 @@ DisplayBoardingGateInfo();
 InitializeFlightDic();
 InitializeBoarding_gates();
 DisplayFlightInfo();
+AssignBGtoFlight();
