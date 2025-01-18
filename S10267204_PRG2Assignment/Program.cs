@@ -45,6 +45,7 @@ void InitializeBoarding_gates()
 
 //FEATURE 2 Load files (flights)
 Dictionary<string,Flight> FlightDic = new Dictionary<string,Flight>();
+Dictionary<string, string> flightSRCs = new Dictionary<string, string>();
 void InitializeFlightDic()
 {
     StreamReader sr = new StreamReader("flights.csv");
@@ -52,11 +53,17 @@ void InitializeFlightDic()
     string[] formats = { "h:mm tt", "htt" };
     while ((s = sr.ReadLine()) != null)
     {
+        string SRC = "";
         string[] info = s.Split(",");
         string flight_number = info[0];
         string origin = info[1];
         string destination = info[2];
         string ETA = info[3];
+        string checkSRC = info[4];
+        if (checkSRC != "")
+        {
+            SRC = checkSRC;
+        }
         DateTime expectedTime;
         if (DateTime.TryParseExact(ETA,
             formats,
@@ -65,6 +72,7 @@ void InitializeFlightDic()
             out expectedTime))
         {
             FlightDic.Add(flight_number, new Flight(flight_number, origin, destination, expectedTime));
+            flightSRCs.Add(flight_number, SRC);
         }
         else
         {
@@ -84,7 +92,6 @@ void DisplayFlightInfo()
 // FEATURE 4 display boarding gates in terminal 5 + extra info
 
 // FEATURE 5 assign boarding gate to a flight
-
 
 
 // FEATURE 6 create a new flight
@@ -144,4 +151,5 @@ DisplayFlightInfo();
 DisplayBoardingGateInfo();
 */
 InitializeFlightDic();
+InitializeBoarding_gates();
 DisplayFlightInfo();
