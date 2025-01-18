@@ -11,18 +11,39 @@ namespace S10267204_PRG2Assignment
         public string Name { get; set; }
         public string Code { get; set; }
 
-        public Dictionary<string, Flight> FlightDic { get; set; }
+        private Dictionary<string, Flight> flights;
 
-        public Airline(string name, string code)
+        public Airline(string code, string name)
         {
-            Name = name;
             Code = code;
-            FlightDic = new Dictionary<string, Flight>();
+            Name = name;    
+            flights = new Dictionary<string, Flight>();
+        }
+
+        public bool AddFlight(Flight flight)
+        {
+            if (!flights.ContainsKey(flight.FlightNumber))
+            {
+                flights.Add(flight.FlightNumber, flight);
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemoveFlight(string flightNumber)
+        {
+            return flights.Remove(flightNumber);
+        }
+
+        public double CalculateFees()
+        {
+            // Placeholder for fee calculation
+            return 0.0;
         }
 
         public override string ToString()
         {
-            return $"Name: {Name,-19} Code: {Code,-3}";
+            return $"Airline: {Name}, Code: {Code}, Flights: {flights.Count}";
         }
     }
 }

@@ -13,9 +13,8 @@ namespace S10267204_PRG2Assignment
         public string Destination { get; set; }
         public DateTime ExpectedTime { get; set; }
         public string Status { get; set; }
-        public Flight () { }
 
-        public Flight (string flightNumber, string origin, string destination, DateTime expectedTime, string status = "Unknown")
+        public Flight(string flightNumber, string origin, string destination, DateTime expectedTime, string status = "Null")
         {
             FlightNumber = flightNumber;
             Origin = origin;
@@ -24,9 +23,14 @@ namespace S10267204_PRG2Assignment
             Status = status;
         }
 
+        public virtual double CalculateFees()
+        {
+            return 0.0;
+        }
+
         public override string ToString()
         {
-            return $"Flight Number: {FlightNumber,-7} Origin: {Origin,-17} Destination: {Destination,-17} Arrival/Depature Time: {ExpectedTime,-23} Status: {Status,-6}";
+            return $"Flight: {FlightNumber}, Origin: {Origin}, Destination: {Destination}, Time: {ExpectedTime}, Status: {Status}";
         }
     }
 }

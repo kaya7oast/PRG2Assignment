@@ -8,22 +8,29 @@ namespace S10267204_PRG2Assignment
 {
     internal class BoardingGate
     {
-        public string Gate { get; set; }
-        public bool DDJB { get; set; }
-        public bool CFFT { get; set; }
-        public bool LWTT { get; set; }
+        public string GateName { get; set; }
+        public bool SupportsCFFT { get; set; }
+        public bool SupportsDDJB { get; set; }
+        public bool SupportsLWTT { get; set; }
+        public Flight Flight { get; set; }
 
-        public BoardingGate(string gate, bool ddjb, bool cfft, bool lwtt)
+        public BoardingGate(string gateName, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
         {
-            Gate = gate;
-            DDJB = ddjb;
-            CFFT = cfft;
-            LWTT = lwtt;
+            GateName = gateName;
+            SupportsCFFT = supportsCFFT;
+            SupportsDDJB = supportsDDJB;
+            SupportsLWTT = supportsLWTT;
+            Flight = null;
+        }
+
+        public double CalculateFees()
+        {
+            return 0.0;
         }
 
         public override string ToString()
         {
-            return $"Gate: {Gate,-4} DDJB: {DDJB,-6} CFFT: {CFFT,-6} LWTT: {LWTT,-6}";
+            return $"Gate: {GateName}, SupportsCFFT: {SupportsCFFT}, SupportsDDJB: {SupportsDDJB}, SupportsLWTT: {SupportsLWTT}, Assigned Flight: {Flight.FlightNumber}";
         }
     }
 }
