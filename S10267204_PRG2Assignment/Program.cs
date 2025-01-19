@@ -158,24 +158,25 @@ void AssignBGtoFlight()
 // FEATURE 6 create a new flight
 void CreateFlight()
 {
-    Console.Write("Enter flight details (Flight Number, Origin, Destination) [seperate info with ',']: ");
+    Console.Write("Enter flight details (Flight Number, Origin, Destination and Status [“Delayed”, “Boarding”, or “On Time”]) [seperate info with ',']: ");
     string[] details = Console.ReadLine().Split(",");
     string new_Flight_No = details[0];
     string new_Origin = details[1];
     string new_Destination = details[2];
+    string new_Status = details[3];
     string[] formats = { "h:mm tt", "htt" };
     Console.WriteLine("Enter Flight's Estimated Time Arrival [hh:mm tt]: ");
     string new_ETA = Console.ReadLine();
     string datetimeformat = "hh:mm tt";
     DateTime expectedTime = DateTime.ParseExact(new_ETA, datetimeformat, System.Globalization.CultureInfo.InvariantCulture);
-    Console.WriteLine("Would you like to enter any additional information (i.e Special Request Code) [Type 'No' if no addtional info added]: ");
+    Console.WriteLine("Please enter any additional information (i.e Special Request Code) [Type 'None' if no addtional info added]: ");
     string additional_details = Console.ReadLine();
     string new_SRC = "";
-    if (additional_details != "No")
+    if (additional_details != "None")
     {
         new_SRC = additional_details;
     }
-    Flight New_Flight = new Flight(new_Flight_No, new_Origin, new_Destination, expectedTime, new_SRC);
+    Flight New_Flight = new Flight(new_Flight_No, new_Origin, new_Destination, expectedTime, new_Status);
     string new_flight_details = $"{new_Flight_No},{new_Origin},{new_Destination},{new_ETA},{new_SRC}";
     using (StreamWriter sw = new StreamWriter("flights.csv", append: true))
     {
