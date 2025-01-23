@@ -8,7 +8,7 @@ namespace S10267204_PRG2Assignment
 {
     internal class NORMFlight : Flight
     {
-        public NORMFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status = "Null") : base (flightNumber, origin, destination, expectedTime, status) {}
+        public NORMFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status = "Null") : base(flightNumber, origin, destination, expectedTime, status) { }
 
         public override string ToString()
         {
