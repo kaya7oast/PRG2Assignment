@@ -1,15 +1,13 @@
 ﻿//==========================================================
 // Student Number	: S10267204
 // Student Name	: Eden Wong
-// Partner Name	: Tian Rui
+// Partner Name	: Luo Tian Rui
 //==========================================================
 // features working on: 2, 3, 5, 6 & 9
 using S10267204_PRG2Assignment;
 using System.Runtime.Serialization;
 
 //FEATURE 1 Load files (airlines and boarding gates)
-
-
 Dictionary<string, Airline> airlinesDic = new Dictionary<string, Airline>();
 void InitializeAirlines()
 // you should name them initialize___dict for future reference as there are many things called airlines and boarding gates already
@@ -21,11 +19,6 @@ void InitializeAirlines()
         var columns = airlineLines[i].Split(',');
         var airline = new Airline(columns[0], columns[1]);
         airlinesDic[columns[1]] = airline;
-    }
-    // no need to display Airlines this is in another feature
-    foreach (var airline in airlinesDic.Values)
-    {
-        Console.WriteLine(airline);
     }
 }
 
@@ -90,6 +83,17 @@ void DisplayFlightInfo()
 }
 
 // FEATURE 4 display boarding gates in terminal 5 + extra info
+void DisplayBoardingGatesInfo()
+{
+    Console.WriteLine("==================================================================");
+    Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
+    Console.WriteLine("==================================================================");
+    Console.WriteLine("Gate Name      DDJB                   CFFT                   LWTT");
+    foreach (var gate in boardingGatesDic.Values)
+    {
+        Console.WriteLine($"{gate.GateName,-15}{gate.SupportsDDJB,-23}{gate.SupportsCFFT,-23}{gate.SupportsLWTT,-15}");
+    }
+}
 
 // FEATURE 5 assign boarding gate to a flight
 void AssignBGtoFlight()
@@ -214,5 +218,6 @@ DisplayBoardingGateInfo();
 */
 InitializeFlightDic();
 InitializeBoarding_gates();
-DisplayFlightInfo();
-AssignBGtoFlight();
+//DisplayFlightInfo();
+//AssignBGtoFlight();
+DisplayBoardingGatesInfo();
