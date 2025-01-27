@@ -208,6 +208,49 @@ void CreateFlights()
     }
 }
 
+//FEATURE 7
+void ListAndDisplayFlightAndAirlineDetails()
+{
+    InitializeFlightDic();
+    InitializeBoarding_gates();
+    InitializeAirlines();
+
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
+    Console.WriteLine($"{"Airline Code",-20}{"Airline Name"}");
+
+    foreach (var airline in airlinesDic.Values)
+    {
+        Console.WriteLine($"{airline.Code,-20}{airline.Name}");
+    }
+
+    Console.WriteLine("\nEnter Airline Code: ");
+    string airlineCode = Console.ReadLine().ToUpper();
+
+    Airline selectedAirline = airlinesDic[airlineCode];
+
+    foreach (Flight flight in FlightDic.Values)
+    {
+        if (flight.FlightNumber.Contains(airlineCode))
+        {
+            selectedAirline.AddFlight(flight);
+
+        }
+    }
+
+    Console.WriteLine("\n=============================================");
+    Console.WriteLine($"List of Flights for {selectedAirline.Name}");
+    Console.WriteLine("=============================================");
+    Console.WriteLine($"{"Flight Number",-20}{"Origin",-20}{"Destination",-20}{"Expected Time"}");
+
+    foreach (var flight in selectedAirline.Flights.Values)
+    {
+        string expectedTime = flight.ExpectedTime.ToString("dd/MM/yyyy hh:mm tt");
+        Console.WriteLine($"{flight.FlightNumber,-20}{flight.Origin,-20}{flight.Destination,-20}{expectedTime}");
+    }
+}
+
 //FEATURE 9 Display scheduled flights in chronological order
 void DisplayInChronologicalOrder()
 {
@@ -234,10 +277,12 @@ void DisplayInChronologicalOrder()
 }
 
 
-InitializeFlightDic();
+/*InitializeFlightDic();
 InitializeBoarding_gates();
 InitializeAirlines();
 DisplayInChronologicalOrder();
 AssignBGtoFlight();
 Console.Clear();
 DisplayInChronologicalOrder();
+*/
+ListAndDisplayFlightAndAirlineDetails();
