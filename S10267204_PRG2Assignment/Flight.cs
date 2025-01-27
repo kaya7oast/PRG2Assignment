@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace S10267204_PRG2Assignment
 {
-    internal class Flight
+    internal class Flight : IComparable<Flight>
     {
         public string FlightNumber { get; set; }
         public string Origin { get; set; }
@@ -27,10 +27,15 @@ namespace S10267204_PRG2Assignment
         {
             return 0.0;
         }
+        public int CompareTo(Flight other)
+        {
+            if (other == null) return 1;
+            return ExpectedTime.CompareTo(other.ExpectedTime);
+        }
 
         public override string ToString()
         {
-            return $"Flight Number: {FlightNumber,-7} Origin: {Origin,-18} Destination: {Destination,-17} Arrival/Depature Time: {ExpectedTime,-23} Status: {Status,-6}";
+            return $"Flight Number: {FlightNumber,-7} Origin: {Origin,-18} Destination: {Destination,-16} Arrival/Depature Time: {ExpectedTime,-22} Status: {Status,-8}";
         }
     }
 }

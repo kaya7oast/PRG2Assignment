@@ -5,6 +5,7 @@
 //==========================================================
 // features working on: 2, 3, 5, 6 & 9
 using S10267204_PRG2Assignment;
+using System.Collections.Immutable;
 using System.Runtime.Serialization;
 
 //FEATURE 1 Load files (airlines and boarding gates)
@@ -102,7 +103,7 @@ void AssignBGtoFlight()
     string searched_flightNO = Console.ReadLine();
     if (flightSRCs[searched_flightNO] != "")
     {
-        Console.WriteLine($"{FlightDic[searched_flightNO]}\tSRC: {flightSRCs[searched_flightNO]}");
+        Console.WriteLine($"{FlightDic[searched_flightNO]} SRC:{flightSRCs[searched_flightNO]}");
     }
     else
     {
@@ -117,11 +118,11 @@ void AssignBGtoFlight()
             boardingGatesDic[selected_BoardingGate].Flight = FlightDic[searched_flightNO];
             if (flightSRCs[searched_flightNO] != "")
             {
-                Console.WriteLine($"{FlightDic[searched_flightNO]}\tSRC: {flightSRCs[searched_flightNO]}\tBoarding Gate: {selected_BoardingGate}");
+                Console.WriteLine($"{FlightDic[searched_flightNO]}\tSRC: {flightSRCs[searched_flightNO]}\nBoarding Gate: {selected_BoardingGate}");
             }
             else
             {
-                Console.WriteLine($"{FlightDic[searched_flightNO]}\tBoarding Gate: {selected_BoardingGate}");
+                Console.WriteLine($"{FlightDic[searched_flightNO]}\nBoarding Gate: {selected_BoardingGate}");
             }
             Console.WriteLine("would you like to update the Status of the Flight, with a new Status of any of the following options: “Delayed” or “Boarding” [Y] \nor set the Status of the Flight to the default of “On Time” and continue to the next step [N]: ");
             string user_answer = Console.ReadLine().ToLower();
@@ -207,17 +208,36 @@ void CreateFlights()
     }
 }
 
-//FEATURE 9 
+//FEATURE 9 Display scheduled flights in chronological order
+void DisplayInChronologicalOrder()
+{
+    var sortedFlights = FlightDic.Values.OrderBy(flight => flight.ExpectedTime).ToList();
 
-/*
-InitializeBoarding_gates();
+    foreach (var flight in sortedFlights)
+    {
+        var assignedGate = boardingGatesDic.Values.FirstOrDefault(gate => gate.Flight != null && gate.Flight.FlightNumber == flight.FlightNumber);
+
+        if (flightSRCs[flight.FlightNumber] == "")
+        {
+            Console.Write($"{flight}");
+        }
+        else
+        {
+            Console.Write($"{flight} SRC:{flightSRCs[flight.FlightNumber],-5}");
+        }
+        if (assignedGate != null)
+        {
+            Console.Write($"\nBoarding Gate: {assignedGate.GateName}");
+        }
+        Console.WriteLine();
+    }
+}
+
+
 InitializeFlightDic();
+InitializeBoarding_gates();
 InitializeAirlines();
-DisplayFlightInfo();
-DisplayBoardingGateInfo();
-*/
-InitializeFlightDic();
-InitializeBoarding_gates();
-//DisplayFlightInfo();
-//AssignBGtoFlight();
-DisplayBoardingGatesInfo();
+DisplayInChronologicalOrder();
+AssignBGtoFlight();
+Console.Clear();
+DisplayInChronologicalOrder();
