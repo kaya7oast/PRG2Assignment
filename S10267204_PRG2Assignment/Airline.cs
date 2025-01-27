@@ -11,20 +11,20 @@ namespace S10267204_PRG2Assignment
         public string Name { get; set; }
         public string Code { get; set; }
 
-        private Dictionary<string, Flight> flights;
+        public Dictionary<string, Flight> Flights;
 
         public Airline(string code, string name)
         {
             Code = code;
             Name = name;
-            flights = new Dictionary<string, Flight>();
+            Flights = new Dictionary<string, Flight>();
         }
 
         public bool AddFlight(Flight flight)
         {
-            if (!flights.ContainsKey(flight.FlightNumber))
+            if (!Flights.ContainsKey(flight.FlightNumber))
             {
-                flights.Add(flight.FlightNumber, flight);
+                Flights.Add(flight.FlightNumber, flight);
                 return true;
             }
             return false;
@@ -32,7 +32,7 @@ namespace S10267204_PRG2Assignment
 
         public bool RemoveFlight(string flightNumber)
         {
-            return flights.Remove(flightNumber);
+            return Flights.Remove(flightNumber);
         }
 
         public double CalculateFees()
@@ -43,7 +43,7 @@ namespace S10267204_PRG2Assignment
 
         public override string ToString()
         {
-            return $"Airline: {Name}, Code: {Code}, Flights: {flights.Count}";
+            return $"Airline: {Name}, Code: {Code}, Flights: {Flights.Count}";
         }
     }
 }
