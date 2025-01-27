@@ -233,21 +233,6 @@ void DisplayInChronologicalOrder()
     }
 }
 
-void feature7()
-{
-    Console.WriteLine("giv flight code:");
-    string selected_airline = Console.ReadLine();
-    Airline Selected_Airline = airlinesDic[selected_airline];
-
-        foreach (Flight flight in FlightDic.Values)
-        {
-            if (flight.FlightNumber.Contains(selected_airline))
-            {
-                Selected_Airline.AddFlight(flight);
-            }
-        }
-    
-}
 
 InitializeFlightDic();
 InitializeBoarding_gates();
