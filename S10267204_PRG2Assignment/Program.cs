@@ -212,29 +212,67 @@ void AssignBGtoFlight()
 // FEATURE 6 create a new flight
 void CreateFlight()
 {
-    Console.Write("Enter flight details (Flight Number, Origin, Destination and Status [“Delayed”, “Boarding”, or “On Time”]) [seperate info with ',']: ");
-    string[] details = Console.ReadLine().Split(",");
-    string new_Flight_No = details[0];
-    string new_Origin = details[1];
-    string new_Destination = details[2];
-    string new_Status = details[3];
+    string[] details = { "", "" };
+    string new_Flight_No = "";
+    string new_Origin = "";
+    string new_Destination = "";
+    string new_Status = "";
+    while (true)
+    {
+        Console.Write("Enter flight details (Flight Number, Origin, Destination and Status [“Delayed”, “Boarding”, or “On Time”]) [seperate info with ',']: ");
+        details = Console.ReadLine().Split(",");
+        try
+        {
+            new_Flight_No = details[0];
+            new_Origin = details[1];
+            new_Destination = details[2];
+            new_Status = details[3];
+            break;
+        }
+        catch (IndexOutOfRangeException)
+        {
+            Console.Clear();
+            Console.WriteLine("You did not input enough details. Try again.\n");
+        }
+    }
     string[] formats = { "h:mm tt", "htt" };
-    Console.WriteLine("Enter Flight's Estimated Time Arrival [hh:mm tt]: ");
-    string new_ETA = Console.ReadLine();
-    string datetimeformat = "hh:mm tt";
-    DateTime expectedTime = DateTime.ParseExact(new_ETA, datetimeformat, System.Globalization.CultureInfo.InvariantCulture);
+    string new_ETA = "";
+    DateTime expectedTime = DateTime.Now;
+    while (true)
+    {
+        Console.WriteLine("Enter Flight's Estimated Time Arrival [hh:mm tt] (e.g., '10:30 PM'): ");
+        new_ETA = Console.ReadLine();
+        try
+        {
+            string datetimeformat = "hh:mm tt";
+            expectedTime = DateTime.ParseExact(new_ETA, datetimeformat, System.Globalization.CultureInfo.InvariantCulture);
+            break;
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid time format. Please enter the time in 'hh:mm tt' format (e.g., '10:30 PM').\n");
+        }
+    }
     Console.WriteLine("Please enter any additional information (i.e Special Request Code) [Type 'None' if no addtional info added]: ");
-    string additional_details = Console.ReadLine();
+    string additional_details = Console.ReadLine().ToLower();
     string new_SRC = "";
-    if (additional_details != "None")
+    if (additional_details != "none")
     {
         new_SRC = additional_details;
     }
     Flight New_Flight = new Flight(new_Flight_No, new_Origin, new_Destination, expectedTime, new_Status);
     string new_flight_details = $"{new_Flight_No},{new_Origin},{new_Destination},{new_ETA},{new_Status}";
-    using (StreamWriter sw = new StreamWriter("flights.csv", append: true))
+    try
     {
-        sw.WriteLine(new_flight_details);
+        using (StreamWriter sfw = new StreamWriter("flights.csv", append: true))
+        {
+            sfw.WriteLine(new_flight_details);
+        }
+        Console.WriteLine($"Flight {New_Flight.FlightNumber} has been added!");
+    }
+    catch (IOException ex)
+    {
+        Console.WriteLine("Error writing to file: " + ex.Message);
     }
 }
 void CreateFlights()
@@ -320,6 +358,7 @@ void DisplayInChronologicalOrder()
         }
         Console.WriteLine();
     }
+    Console.WriteLine();
 }
 
 //Aditional Feature - Eden
@@ -343,10 +382,11 @@ void BulkProcessUnassignedFlights()
             unassignedGates.Add(gate);
         }
     }
-
-    Console.WriteLine($"\nTotal number of unassigned flights: {unassignedFlights.Count}");
-    Console.WriteLine($"Total number of unassigned boarding gates: {unassignedGates.Count}");
-
+    int unassignedflights = unassignedFlights.Count;
+    int unassignedgates = unassignedGates.Count;
+    Console.WriteLine($"\nTotal number of unassigned flights: {unassignedflights}");
+    Console.WriteLine($"Total number of unassigned boarding gates: {unassignedgates}");
+    
     int processedFlights = 0;
     int processedGates = 0;
 
@@ -378,11 +418,11 @@ void BulkProcessUnassignedFlights()
 
     Console.WriteLine($"\nTotal flights processed and assigned: {processedFlights}");
     Console.WriteLine($"Total gates processed and assigned: {processedGates}");
-
+    Console.WriteLine();
     int totalFlights = FlightDic.Count;
     int totalGates = boardingGatesDic.Count;
-    Console.WriteLine($"Percentage of flights assigned: {((double)processedFlights / totalFlights) * 100:0.00}%");
-    Console.WriteLine($"Percentage of gates assigned: {((double)processedGates / totalGates) * 100:0.00}%");
+    Console.WriteLine($"Percentage of flights assigned: {((double)processedFlights / unassignedflights) * 100:0.00}%");
+    Console.WriteLine($"Percentage of gates assigned: {((double)processedGates / unassignedgates) * 100:0.00}%");
 }
 void Main()
 {
@@ -431,6 +471,7 @@ void Main()
 
                 case 8:
                     BulkProcessUnassignedFlights();
+                    Console.WriteLine();
                     break;
 
                 case 0:
