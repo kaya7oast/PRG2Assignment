@@ -90,10 +90,16 @@ void DisplayFlightInfo()
     Console.WriteLine("==================================================================");
     Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
     Console.WriteLine("==================================================================");
-    Console.WriteLine($"{"Flight Number:",-15}{"Origin:",-19}{"Destination:",-17}{"Arrival/Depature Time:",-24}{"Status:",-8}");
+    Console.WriteLine($"{"Flight Number:",-15}{"Airline Name:",-19}{"Origin:",-19}{"Destination:",-17}{"Arrival/Depature Time:",-24}{"Status:",-8}");
     foreach (Flight flight in FlightDic.Values)
     {
-        Console.WriteLine(flight);
+        foreach (Airline airline in airlinesDic.Values)
+        {
+            if (flight.FlightNumber.Contains(airline.Name))
+            {
+                Console.WriteLine($"{flight.FlightNumber,-15}{airline.Code,-19}{flight.Origin,-19}{flight.Destination,-17}{flight.ExpectedTime,-24}{flight.Status,-8}");
+            }
+        }
     }
     Console.WriteLine();
 }
@@ -254,14 +260,11 @@ void CreateFlights()
 //FEATURE 7
 void ListAndDisplayFlightAndAirlineDetails()
 {
-    InitializeFlightDic();
-    InitializeBoarding_gates();
-    InitializeAirlines();
 
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
-    Console.WriteLine($"{"Airline Code",-20}{"Airline Name"}");
+    Console.WriteLine($"{"Airline Name",-20}{"Airline Code"}");
 
     foreach (var airline in airlinesDic.Values)
     {
@@ -278,7 +281,6 @@ void ListAndDisplayFlightAndAirlineDetails()
         if (flight.FlightNumber.Contains(airlineCode))
         {
             selectedAirline.AddFlight(flight);
-
         }
     }
 
@@ -292,14 +294,12 @@ void ListAndDisplayFlightAndAirlineDetails()
         string expectedTime = flight.ExpectedTime.ToString("dd/MM/yyyy hh:mm tt");
         Console.WriteLine($"{flight.FlightNumber,-20}{flight.Origin,-20}{flight.Destination,-20}{expectedTime}");
     }
+    Console.WriteLine();
 }
 
 //FEATURE 9 Display scheduled flights in chronological order
 void DisplayInChronologicalOrder()
 {
-    InitializeFlightDic();
-    InitializeBoarding_gates();
-    InitializeAirlines();
     var sortedFlights = FlightDic.Values.OrderBy(flight => flight.ExpectedTime).ToList();
 
     foreach (var flight in sortedFlights)
