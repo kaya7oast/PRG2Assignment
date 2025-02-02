@@ -603,6 +603,133 @@ void BulkProcessUnassignedFlights()
     Console.WriteLine($"Percentage of flights assigned: {((double)processedFlights / unassignedflights) * 100:0.00}%");
     Console.WriteLine($"Percentage of gates assigned: {((double)processedGates / unassignedgates) * 100:0.00}%");
 }
+
+//ADDITIONAL FEATURE - TIAN RUI
+void DisplayTotalFeePerAirline(Dictionary<string, Airline> airlinesDic, Dictionary<string, BoardingGate> boardingGatesDic)
+{
+    // Step 1: Check that all flights have been assigned boarding gates
+    List<string> unassignedFlights = new List<string>();
+
+    foreach (var airline in airlinesDic.Values)
+    {
+        foreach (var flight in airline.Flights.Values)
+        {
+            bool hasGate = boardingGatesDic.Values.Any(gate => gate.Flight == flight);
+            if (!hasGate)
+            {
+                unassignedFlights.Add(flight.FlightNumber);
+            }
+        }
+    }
+
+    if (unassignedFlights.Count > 0)
+    {
+        Console.WriteLine("The following flights do not have assigned boarding gates:");
+        foreach (string flightNumber in unassignedFlights)
+        {
+            Console.WriteLine($"- Flight {flightNumber}");
+        }
+        Console.WriteLine("Please assign all unassigned flights before running this feature again.");
+        return;
+    }
+
+    // Step 2: Compute fees per airline
+    double totalFees = 0;
+    double totalDiscounts = 0;
+
+    Console.WriteLine("=== Airline Fee Breakdown ===");
+
+    foreach (var airline in airlinesDic.Values)
+    {
+        double airlineSubtotal = 0;
+        double airlineDiscounts = 0;
+
+        Console.WriteLine($"Checking Airline: {airline.Name} (Flights: {airline.Flights.Count})");
+
+        foreach (var flight in airline.Flights.Values)
+        {
+            double flightFee = 300; // Base Boarding Gate Fee
+
+            // Check for assigned boarding gate
+            BoardingGate assignedGate = boardingGatesDic.Values.FirstOrDefault(g => g.Flight == flight);
+            if (assignedGate == null)
+            {
+                Console.WriteLine($"Flight {flight.FlightNumber} has NO assigned boarding gate! Skipping fee calculation.");
+                continue;
+            }
+            else
+            {
+                Console.WriteLine($"Flight {flight.FlightNumber} assigned to Gate {assignedGate.GateName}");
+            }
+
+            // SIN origin fee ($800) or destination fee ($500)
+            if (flight.Origin == "SIN")
+            {
+                flightFee += 800;
+                Console.WriteLine($"Flight {flight.FlightNumber} departs from SIN, adding $800");
+            }
+            if (flight.Destination == "SIN")
+            {
+                flightFee += 500;
+                Console.WriteLine($"Flight {flight.FlightNumber} arrives at SIN, adding $500");
+            }
+
+            // Special Request Fee (if applicable)
+            if (assignedGate.SupportsCFFT)
+            {
+                flightFee += 200;
+                Console.WriteLine($"Flight {flight.FlightNumber} supports CFFT, adding $200");
+            }
+            if (assignedGate.SupportsDDJB)
+            {
+                flightFee += 150;
+                Console.WriteLine($"Flight {flight.FlightNumber} supports DDJB, adding $150");
+            }
+            if (assignedGate.SupportsLWTT)
+            {
+                flightFee += 100;
+                Console.WriteLine($"Flight {flight.FlightNumber} supports LWTT, adding $100");
+            }
+
+            airlineSubtotal += flightFee;
+            Console.WriteLine($"Total fee for Flight {flight.FlightNumber}: ${flightFee}");
+        }
+
+        // Apply Promotional Discounts (if applicable)
+        airlineDiscounts = CalculatePromotionalDiscount(airline, airlineSubtotal);
+
+        // Final fee after discount
+        double airlineTotal = airlineSubtotal - airlineDiscounts;
+        totalFees += airlineSubtotal;
+        totalDiscounts += airlineDiscounts;
+
+        Console.WriteLine($"\n{airline.Name} (Code: {airline.Code})");
+        Console.WriteLine($"Subtotal Fees: ${airlineSubtotal}");
+        Console.WriteLine($"Discounts Applied: -${airlineDiscounts}");
+        Console.WriteLine($"Final Fees to be Charged: ${airlineTotal}");
+        Console.WriteLine("--------------------------------------");
+    }
+
+    // Step 3: Display Total Fees Summary
+    Console.WriteLine("=== Terminal 5 Summary ===");
+    Console.WriteLine($"Total Airline Fees Before Discounts: ${totalFees}");
+    Console.WriteLine($"Total Discounts Applied: -${totalDiscounts}");
+    Console.WriteLine($"Final Total Fees Collected: ${totalFees - totalDiscounts}");
+    Console.WriteLine($"Percentage of Discounts: {((totalFees == 0) ? 0 : (totalDiscounts / totalFees) * 100):0.00}%");
+}
+
+// Placeholder function for promotional discount calculations
+double CalculatePromotionalDiscount(Airline airline, double subtotal)
+{
+    // Example: Apply a 10% discount for airlines with more than 5 flights
+    if (airline.Flights.Count > 5)
+    {
+        Console.WriteLine($"Promotional discount applied to {airline.Name}: 10% of ${subtotal}");
+        return subtotal * 0.1;
+    }
+    return 0;
+}
+
 void Main()
 {
     InitializeFlightDic();
@@ -612,7 +739,7 @@ void Main()
     bool program = true;
     while (program)
     {
-        Console.WriteLine("=============================================\r\nWelcome to Changi Airport Terminal 5\r\n=============================================\r\n1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n8. Bulk Assign Flights To Gates\r\n0. Exit\n");
+        Console.WriteLine("=============================================\r\nWelcome to Changi Airport Terminal 5\r\n=============================================\r\n1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n8. Bulk Assign Flights To Gates\r\n9. Display Total Fees Per Airline\r\n0. Exit\n");
         Console.WriteLine("Please select your option: ");
         string user_input = Console.ReadLine();
         Console.WriteLine();
@@ -651,6 +778,10 @@ void Main()
                 case 8:
                     BulkProcessUnassignedFlights();
                     Console.WriteLine();
+                    break;
+
+                case 9:
+                    DisplayTotalFeePerAirline(airlinesDic, boardingGatesDic);
                     break;
 
                 case 0:
