@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+//==========================================================
+// Student Number	: S10267204
+// Student Name	: Eden Wong
+// Partner Name	: Luo Tian Rui
+//==========================================================
 namespace S10267204_PRG2Assignment
 {
     internal class Flight : IComparable<Flight>
