@@ -13,7 +13,7 @@ int count = 0;
 Dictionary<string, Airline> airlinesDic = new Dictionary<string, Airline>();
 void InitializeAirlines()
 {
-    Console.WriteLine("Loading Ailines...");
+    Console.WriteLine("Loading Airlines...");
     string[] airlineLines = File.ReadAllLines("airlines.csv");
     count = 0;
     for (int i = 1; i < airlineLines.Length; i++)
